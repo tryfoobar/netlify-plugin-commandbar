@@ -1,0 +1,25 @@
+{
+  "name": "netlify-plugin-commandbar",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "manifest.yml"
+  ],
+  "version": "0.0.1",
+  "description": "CommandBar plugin for sites deployed to Netlify",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tryfoobar/netlify-plugin-commandbar.git"
+  },
+  "keywords": [
+    "commandbar",
+    "commandbar-plugin",
+    "netlify"
+  ],
+  "author": "Foobar, Inc.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tryfoobar/netlify-plugin-commandbar/issues"
+  },
+  "homepage": "https://github.com/tryfoobar/netlify-plugin-commandbar#readme"
+}

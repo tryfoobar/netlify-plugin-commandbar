@@ -1,0 +1,5 @@
+name: netlify-plugin-commandbar
+inputs:
+  - name: orgId
+    required: true
+    description: Your Organization ID
