@@ -14,7 +14,8 @@
   "keywords": [
     "commandbar",
     "commandbar-plugin",
-    "netlify"
+    "netlify",
+    "netlify-plugin"
   ],
   "author": "Foobar, Inc.",
   "license": "MIT",

@@ -75,7 +75,7 @@ module.exports = {
       utils.build.failBuild("CommandBar snippet was not injected");
     }
 
-    if (inputs.linkCommands) {
+    if (inputs.linkCommands && inputs.linkCommands.length > 0) {
       try {
         const linkCommandsSnippet = getLinkCommandsSnippet(inputs.linkCommands);
 
