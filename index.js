@@ -69,10 +69,12 @@ module.exports = {
     try {
       await injectCommandBarSnippet(indexHtmlPath, commandbarSnippet);
 
-      console.log('CommandBar snippet was successfully injected');
+      utils.status.show({
+        summary: 'CommandBar successfully injected',
+      });
     } catch (e) {
       console.error(e);
-      utils.build.failBuild('CommandBar snippet was not injected');
+      utils.build.failBuild('CommandBar was not injected');
     }
 
     if (inputs.linkCommands && inputs.linkCommands.length > 0) {
@@ -82,13 +84,15 @@ module.exports = {
         if (linkCommandsSnippet) {
           await injectLinkCommandsSnippet(indexHtmlPath, linkCommandsSnippet);
 
-          console.log(
-            'CommandBar link commands snippet was successfully injected',
-          );
+          utils.status.show({
+            summary: 'CommandBar link commands were successfully injected',
+          });
         }
       } catch (e) {
         console.error(e);
-        console.log('CommandBar link commands snippet was not injected');
+        utils.status.show({
+          summary: 'WARNING: CommandBar link commands were not injected',
+        });
       }
     }
   },
