@@ -1,4 +1,4 @@
-const fs = require("fs").promises;
+const fs = require('fs').promises;
 
 const getCommandBarSnippet = (orgId) => {
   return `<script>
@@ -8,10 +8,10 @@ const getCommandBarSnippet = (orgId) => {
 };
 
 const readIndexHtml = async (path) => {
-  return await fs.readFile(path, { encoding: "utf8" });
+  return await fs.readFile(path, { encoding: 'utf8' });
 };
 
-const convertToSnakeCase = (str) => str.toLowerCase().split(" ").join("_");
+const convertToSnakeCase = (str) => str.toLowerCase().split(' ').join('_');
 
 const getLinkCommandSnippet = (name, link) => `
     window.CommandBar.addCommand({
@@ -26,14 +26,14 @@ const getLinkCommandSnippet = (name, link) => `
 
 const getLinkCommandsSnippet = (linkCommands) => {
   const linkCommandsCode = Object.entries(linkCommands)
-    .filter(([key, value]) => key && value && key !== "undefined")
+    .filter(([key, value]) => key && value && key !== 'undefined')
     .map(([key, value]) => getLinkCommandSnippet(key, value));
 
   if (linkCommandsCode.length === 0) {
     return null;
   }
 
-  const linkCommandsSnippet = linkCommandsCode.join("");
+  const linkCommandsSnippet = linkCommandsCode.join('');
 
   return `<script>${linkCommandsSnippet}</script>`;
 };
@@ -41,8 +41,8 @@ const getLinkCommandsSnippet = (linkCommands) => {
 const injectCommandBarSnippet = async (indexHtmlPath, commandbarSnippet) => {
   const html = await readIndexHtml(indexHtmlPath);
   const htmlWithSnippet = html.replace(
-    "</head>",
-    `${commandbarSnippet}</head>`
+    '</head>',
+    `${commandbarSnippet}</head>`,
   );
 
   await fs.writeFile(indexHtmlPath, htmlWithSnippet);
@@ -50,12 +50,12 @@ const injectCommandBarSnippet = async (indexHtmlPath, commandbarSnippet) => {
 
 const injectLinkCommandsSnippet = async (
   indexHtmlPath,
-  linkCommandsSnippet
+  linkCommandsSnippet,
 ) => {
   const html = await readIndexHtml(indexHtmlPath);
   const htmlWithSnippet = html.replace(
-    "</body>",
-    `${linkCommandsSnippet}</body>`
+    '</body>',
+    `${linkCommandsSnippet}</body>`,
   );
 
   await fs.writeFile(indexHtmlPath, htmlWithSnippet);
@@ -69,10 +69,10 @@ module.exports = {
     try {
       await injectCommandBarSnippet(indexHtmlPath, commandbarSnippet);
 
-      console.log("CommandBar snippet was successfully injected");
+      console.log('CommandBar snippet was successfully injected');
     } catch (e) {
       console.error(e);
-      utils.build.failBuild("CommandBar snippet was not injected");
+      utils.build.failBuild('CommandBar snippet was not injected');
     }
 
     if (inputs.linkCommands && inputs.linkCommands.length > 0) {
@@ -83,12 +83,12 @@ module.exports = {
           await injectLinkCommandsSnippet(indexHtmlPath, linkCommandsSnippet);
 
           console.log(
-            "CommandBar link commands snippet was successfully injected"
+            'CommandBar link commands snippet was successfully injected',
           );
         }
       } catch (e) {
         console.error(e);
-        console.log("CommandBar link commands snippet was not injected");
+        console.log('CommandBar link commands snippet was not injected');
       }
     }
   },
