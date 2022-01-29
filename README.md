@@ -13,7 +13,7 @@ Quickly add CommandBar to your Netlify project.
 
 ## Getting Started
 
-[Sign up for a CommandBar account](https://commandbar.com/signup)
+[Sign up for a CommandBar account](https://app.commandbar.com/signup)
 
 Add your CommandBar ID to your netlify.toml
 
