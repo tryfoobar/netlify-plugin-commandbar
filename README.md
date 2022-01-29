@@ -25,12 +25,12 @@ package = "@commandbar/netlify-plugin-commandbar"
 
 # Required
 [plugins.inputs]
-orgID = 424242
+orgID = 424242 // grab from https://app.commandbar.com
 
 # Optional
 [plugins.inputs.linkCommands]
-"Go to google" = 'https://google.com'
-"Go to stack overflow" = 'https://stackoverflow.com'
+"Go to dashboard" = '/dashboard' // relative link
+"Go to stack overflow" = 'https://stackoverflow.com' // aboslute link
 ```
 
 ## Troubleshooting
