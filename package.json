@@ -1,5 +1,5 @@
 {
-  "name": "netlify-plugin-commandbar",
+  "name": "@commandbar/netlify-plugin-commandbar",
   "main": "index.js",
   "files": [
     "index.js",

@@ -21,7 +21,7 @@ Add your CommandBar ID to your netlify.toml
 # Example configuration
 
 [[plugins]]
-package = "netlify-plugin-commandbar"
+package = "@commandbar/netlify-plugin-commandbar"
 
 # Required
 [plugins.inputs]
