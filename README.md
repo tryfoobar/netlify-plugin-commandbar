@@ -15,17 +15,13 @@ Quickly add CommandBar to your Netlify project.
 
 [Sign up for a CommandBar account](https://app.commandbar.com/signup)
 
-Add your CommandBar ID to your netlify.toml
+Create `ORG_ID` [environment variable](https://docs.netlify.com/configure-builds/environment-variables/) with your CommandBar organization id.
 
 ```
 # Example configuration
 
 [[plugins]]
 package = "@commandbar/netlify-plugin-commandbar"
-
-# Required
-[plugins.inputs]
-orgID = 424242 // grab from https://app.commandbar.com
 
 # Optional
 [plugins.inputs.linkCommands]

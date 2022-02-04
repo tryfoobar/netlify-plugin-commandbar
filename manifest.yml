@@ -1,8 +1,5 @@
 name: netlify-plugin-commandbar
 inputs:
-  - name: orgId
-    required: true
-    description: Your Organization ID
   - name: linkCommands
     required: false
     description: A list of command labels and urls which will generate CommandBar Link Commands

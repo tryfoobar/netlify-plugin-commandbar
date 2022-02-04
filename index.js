@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const { ORG_ID } = process.env;
 
 const getCommandBarSnippet = (orgId) => {
   return `<script>
@@ -40,31 +41,26 @@ const getLinkCommandsSnippet = (linkCommands) => {
 
 const injectCommandBarSnippet = async (indexHtmlPath, commandbarSnippet) => {
   const html = await readIndexHtml(indexHtmlPath);
-  const htmlWithSnippet = html.replace(
-    '</head>',
-    `${commandbarSnippet}</head>`,
-  );
+  const htmlWithSnippet = html.replace('</head>', `${commandbarSnippet}</head>`);
 
   await fs.writeFile(indexHtmlPath, htmlWithSnippet);
 };
 
-const injectLinkCommandsSnippet = async (
-  indexHtmlPath,
-  linkCommandsSnippet,
-) => {
+const injectLinkCommandsSnippet = async (indexHtmlPath, linkCommandsSnippet) => {
   const html = await readIndexHtml(indexHtmlPath);
-  const htmlWithSnippet = html.replace(
-    '</body>',
-    `${linkCommandsSnippet}</body>`,
-  );
+  const htmlWithSnippet = html.replace('</body>', `${linkCommandsSnippet}</body>`);
 
   await fs.writeFile(indexHtmlPath, htmlWithSnippet);
 };
 
 module.exports = {
   onPostBuild: async ({ netlifyConfig, inputs, utils }) => {
+    if (!ORG_ID) {
+      utils.build.failBuild('Organization ID is not defined. CommandBar was not injected');
+    }
+
     const indexHtmlPath = `${netlifyConfig.build.publish}/index.html`;
-    const commandbarSnippet = getCommandBarSnippet(inputs.orgId);
+    const commandbarSnippet = getCommandBarSnippet(ORG_ID);
 
     try {
       await injectCommandBarSnippet(indexHtmlPath, commandbarSnippet);
