@@ -39,18 +39,18 @@ const getLinkCommandsSnippet = (linkCommands) => {
   return `<script>${linkCommandsSnippet}</script>`;
 };
 
-const injectCommandBarSnippet = async (indexHtmlPath, commandbarSnippet) => {
-  const html = await readIndexHtml(indexHtmlPath);
+const injectCommandBarSnippet = async (entryPointPath, commandbarSnippet) => {
+  const html = await readIndexHtml(entryPointPath);
   const htmlWithSnippet = html.replace('</head>', `${commandbarSnippet}</head>`);
 
-  await fs.writeFile(indexHtmlPath, htmlWithSnippet);
+  await fs.writeFile(entryPointPath, htmlWithSnippet);
 };
 
-const injectLinkCommandsSnippet = async (indexHtmlPath, linkCommandsSnippet) => {
-  const html = await readIndexHtml(indexHtmlPath);
+const injectLinkCommandsSnippet = async (entryPointPath, linkCommandsSnippet) => {
+  const html = await readIndexHtml(entryPointPath);
   const htmlWithSnippet = html.replace('</body>', `${linkCommandsSnippet}</body>`);
 
-  await fs.writeFile(indexHtmlPath, htmlWithSnippet);
+  await fs.writeFile(entryPointPath, htmlWithSnippet);
 };
 
 module.exports = {
@@ -59,18 +59,21 @@ module.exports = {
       utils.build.failBuild('Organization ID is not defined. CommandBar was not injected');
     }
 
-    const indexHtmlPath = `${netlifyConfig.build.publish}/index.html`;
+    // Relative to publish directory
+    const entryPointPath = inputs.entryPoint ?? "index.html";
+
+    const fullEntryPointPath = `${netlifyConfig.build.publish}/${entryPointPath}`;
     const commandbarSnippet = getCommandBarSnippet(ORG_ID);
 
     try {
-      await injectCommandBarSnippet(indexHtmlPath, commandbarSnippet);
+      await injectCommandBarSnippet(fullEntryPointPath, commandbarSnippet);
 
       utils.status.show({
         summary: 'CommandBar successfully injected',
       });
     } catch (e) {
       console.error(e);
-      utils.build.failBuild('CommandBar was not injected');
+      utils.build.failBuild('CommandBar was not injected. Please check if entry point path was configured properly.');
     }
 
     if (inputs.linkCommands && inputs.linkCommands.length > 0) {
@@ -78,7 +81,7 @@ module.exports = {
         const linkCommandsSnippet = getLinkCommandsSnippet(inputs.linkCommands);
 
         if (linkCommandsSnippet) {
-          await injectLinkCommandsSnippet(indexHtmlPath, linkCommandsSnippet);
+          await injectLinkCommandsSnippet(fullEntryPointPath, linkCommandsSnippet);
 
           utils.status.show({
             summary: 'CommandBar link commands were successfully injected',

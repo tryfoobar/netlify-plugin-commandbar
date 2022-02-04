@@ -1,6 +1,12 @@
 name: netlify-plugin-commandbar
 inputs:
+  - name: entryPoint
+    required: false
+    description: Path to the entry point relative to the publish directory
+    default: index.html
+
   - name: linkCommands
     required: false
     description: A list of command labels and urls which will generate CommandBar Link Commands
     default: []
+
