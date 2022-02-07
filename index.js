@@ -12,6 +12,10 @@ const readIndexHtml = async (path) => {
   return await fs.readFile(path, { encoding: 'utf8' });
 };
 
+const checkIfFileExists = async (path) => {
+  return await fs.access(path);
+};
+
 const convertToSnakeCase = (str) => str.toLowerCase().split(' ').join('_');
 
 const getLinkCommandSnippet = (name, link) => `
@@ -66,14 +70,23 @@ module.exports = {
     const commandbarSnippet = getCommandBarSnippet(ORG_ID);
 
     try {
+      await checkIfFileExists(fullEntryPointPath);
+    } catch (e) {
+      console.error(e);
+      utils.build.failBuild('Entry point file not found: ' + fullEntryPointPath);
+    }
+
+    try {
       await injectCommandBarSnippet(fullEntryPointPath, commandbarSnippet);
 
       utils.status.show({
         summary: 'CommandBar successfully injected',
       });
     } catch (e) {
-      console.error(e);
-      utils.build.failBuild('CommandBar was not injected. Please check if entry point path was configured properly.');
+      utils.status.show({
+        summary: 'ERROR: CommandBar was not injected. Please check if entry point path was configured properly.',
+      });
+      throw(e);
     }
 
     if (inputs.linkCommands && inputs.linkCommands.length > 0) {
@@ -88,10 +101,10 @@ module.exports = {
           });
         }
       } catch (e) {
-        console.error(e);
         utils.status.show({
           summary: 'WARNING: CommandBar link commands were not injected',
         });
+        throw(e);
       }
     }
   },
