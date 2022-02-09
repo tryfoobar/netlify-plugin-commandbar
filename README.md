@@ -15,7 +15,9 @@ Quickly add CommandBar to your Netlify project.
 
 [Sign up for a CommandBar account](https://app.commandbar.com/signup)
 
-Add your CommandBar ID to your netlify.toml
+Create an [environment variable](https://docs.netlify.com/configure-builds/environment-variables/) `COMMANDBAR_ORG_ID` with your CommandBar organization id.
+
+Configure the entry point (relative to the publish directory) if it's different from `index.html`.
 
 ```
 # Example configuration
@@ -23,11 +25,9 @@ Add your CommandBar ID to your netlify.toml
 [[plugins]]
 package = "@commandbar/netlify-plugin-commandbar"
 
-# Required
-[plugins.inputs]
-orgID = 424242 // grab from https://app.commandbar.com
-
 # Optional
+entryPoint = "path/to/entrypoint.html"
+
 [plugins.inputs.linkCommands]
 "Go to dashboard" = '/dashboard' // relative link
 "Go to stack overflow" = 'https://stackoverflow.com' // aboslute link

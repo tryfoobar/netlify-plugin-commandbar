@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const { COMMANDBAR_ORG_ID } = process.env;
 
 const getCommandBarSnippet = (orgId) => {
   return `<script>
@@ -9,6 +10,10 @@ const getCommandBarSnippet = (orgId) => {
 
 const readIndexHtml = async (path) => {
   return await fs.readFile(path, { encoding: 'utf8' });
+};
+
+const checkIfFileExists = async (path) => {
+  return await fs.access(path);
 };
 
 const convertToSnakeCase = (str) => str.toLowerCase().split(' ').join('_');
@@ -38,43 +43,50 @@ const getLinkCommandsSnippet = (linkCommands) => {
   return `<script>${linkCommandsSnippet}</script>`;
 };
 
-const injectCommandBarSnippet = async (indexHtmlPath, commandbarSnippet) => {
-  const html = await readIndexHtml(indexHtmlPath);
-  const htmlWithSnippet = html.replace(
-    '</head>',
-    `${commandbarSnippet}</head>`,
-  );
+const injectCommandBarSnippet = async (entryPointPath, commandbarSnippet) => {
+  const html = await readIndexHtml(entryPointPath);
+  const htmlWithSnippet = html.replace('</head>', `${commandbarSnippet}</head>`);
 
-  await fs.writeFile(indexHtmlPath, htmlWithSnippet);
+  await fs.writeFile(entryPointPath, htmlWithSnippet);
 };
 
-const injectLinkCommandsSnippet = async (
-  indexHtmlPath,
-  linkCommandsSnippet,
-) => {
-  const html = await readIndexHtml(indexHtmlPath);
-  const htmlWithSnippet = html.replace(
-    '</body>',
-    `${linkCommandsSnippet}</body>`,
-  );
+const injectLinkCommandsSnippet = async (entryPointPath, linkCommandsSnippet) => {
+  const html = await readIndexHtml(entryPointPath);
+  const htmlWithSnippet = html.replace('</body>', `${linkCommandsSnippet}</body>`);
 
-  await fs.writeFile(indexHtmlPath, htmlWithSnippet);
+  await fs.writeFile(entryPointPath, htmlWithSnippet);
 };
 
 module.exports = {
   onPostBuild: async ({ netlifyConfig, inputs, utils }) => {
-    const indexHtmlPath = `${netlifyConfig.build.publish}/index.html`;
-    const commandbarSnippet = getCommandBarSnippet(inputs.orgId);
+    if (!COMMANDBAR_ORG_ID) {
+      utils.build.failBuild('Organization ID is not defined. CommandBar was not injected');
+    }
+
+    // Relative to publish directory
+    const entryPointPath = inputs.entryPoint ?? "index.html";
+
+    const fullEntryPointPath = `${netlifyConfig.build.publish}/${entryPointPath}`;
+    const commandbarSnippet = getCommandBarSnippet(COMMANDBAR_ORG_ID);
 
     try {
-      await injectCommandBarSnippet(indexHtmlPath, commandbarSnippet);
+      await checkIfFileExists(fullEntryPointPath);
+    } catch (e) {
+      console.error(e);
+      utils.build.failBuild('Entry point file not found: ' + fullEntryPointPath);
+    }
+
+    try {
+      await injectCommandBarSnippet(fullEntryPointPath, commandbarSnippet);
 
       utils.status.show({
         summary: 'CommandBar successfully injected',
       });
     } catch (e) {
-      console.error(e);
-      utils.build.failBuild('CommandBar was not injected');
+      utils.status.show({
+        summary: 'ERROR: CommandBar was not injected. Please double check that the entryPoint path was configured properly.',
+      });
+      throw(e);
     }
 
     if (inputs.linkCommands && inputs.linkCommands.length > 0) {
@@ -82,17 +94,17 @@ module.exports = {
         const linkCommandsSnippet = getLinkCommandsSnippet(inputs.linkCommands);
 
         if (linkCommandsSnippet) {
-          await injectLinkCommandsSnippet(indexHtmlPath, linkCommandsSnippet);
+          await injectLinkCommandsSnippet(fullEntryPointPath, linkCommandsSnippet);
 
           utils.status.show({
             summary: 'CommandBar link commands were successfully injected',
           });
         }
       } catch (e) {
-        console.error(e);
         utils.status.show({
           summary: 'WARNING: CommandBar link commands were not injected',
         });
+        throw(e);
       }
     }
   },
