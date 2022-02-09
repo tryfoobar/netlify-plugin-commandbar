@@ -5,7 +5,7 @@
     "index.js",
     "manifest.yml"
   ],
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "CommandBar plugin for sites deployed to Netlify",
   "repository": {
     "type": "git",
