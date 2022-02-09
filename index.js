@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const { ORG_ID } = process.env;
+const { COMMANDBAR_ORG_ID } = process.env;
 
 const getCommandBarSnippet = (orgId) => {
   return `<script>
@@ -59,7 +59,7 @@ const injectLinkCommandsSnippet = async (entryPointPath, linkCommandsSnippet) =>
 
 module.exports = {
   onPostBuild: async ({ netlifyConfig, inputs, utils }) => {
-    if (!ORG_ID) {
+    if (!COMMANDBAR_ORG_ID) {
       utils.build.failBuild('Organization ID is not defined. CommandBar was not injected');
     }
 
@@ -67,7 +67,7 @@ module.exports = {
     const entryPointPath = inputs.entryPoint ?? "index.html";
 
     const fullEntryPointPath = `${netlifyConfig.build.publish}/${entryPointPath}`;
-    const commandbarSnippet = getCommandBarSnippet(ORG_ID);
+    const commandbarSnippet = getCommandBarSnippet(COMMANDBAR_ORG_ID);
 
     try {
       await checkIfFileExists(fullEntryPointPath);
@@ -84,7 +84,7 @@ module.exports = {
       });
     } catch (e) {
       utils.status.show({
-        summary: 'ERROR: CommandBar was not injected. Please check if entry point path was configured properly.',
+        summary: 'ERROR: CommandBar was not injected. Please double check that the entryPoint path was configured properly.',
       });
       throw(e);
     }

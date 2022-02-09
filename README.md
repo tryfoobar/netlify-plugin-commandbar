@@ -15,7 +15,7 @@ Quickly add CommandBar to your Netlify project.
 
 [Sign up for a CommandBar account](https://app.commandbar.com/signup)
 
-Create `ORG_ID` [environment variable](https://docs.netlify.com/configure-builds/environment-variables/) with your CommandBar organization id.
+Create an [environment variable](https://docs.netlify.com/configure-builds/environment-variables/) `COMMANDBAR_ORG_ID` with your CommandBar organization id.
 
 Configure the entry point (relative to the publish directory) if it's different from `index.html`.
 
