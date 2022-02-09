@@ -89,7 +89,7 @@ module.exports = {
       throw(e);
     }
 
-    if (inputs.linkCommands && inputs.linkCommands.length > 0) {
+    if (inputs.linkCommands) {
       try {
         const linkCommandsSnippet = getLinkCommandsSnippet(inputs.linkCommands);
 
